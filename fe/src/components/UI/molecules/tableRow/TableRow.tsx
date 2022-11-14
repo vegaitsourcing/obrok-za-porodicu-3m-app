@@ -9,22 +9,31 @@ interface Props {
   onClickEdit: (val: any) => void;
 }
 
-const TableRow: React.FC<Props> = ({ item, columns, deleteHandler, onClickEdit }) => {
+const TableRow: React.FC<Props> = ({
+  item,
+  columns,
+  deleteHandler,
+  onClickEdit,
+}) => {
   const onClickHandler = () => {
     deleteHandler(item.id);
+  };
+
+  const getColumnValue = (value: string | boolean) => {
+    const isBoolean = typeof value === "boolean";
+    return isBoolean ? (value ? "Da" : "Ne") : value;
   };
 
   return (
     <tr key={`table-row-${item.id}`}>
       {columns.map((column, columnIndex) => (
         <td key={`table-row-cell-${columnIndex}`}>
-          {typeof item[column] === "string" && item[column] !== undefined ? (
-            item[column]
-          ) : item[column] ? (
-            "Da"
-          ) : item[column] === undefined ? (
+          {item[column] !== undefined ? (
+            getColumnValue(item[column])
+          ) : (
             <>
-              <button className={classes["edit-icon-button"]}
+              <button
+                className={classes["edit-icon-button"]}
                 onClick={() => onClickEdit(item)}
               >
                 <EditIcon width={16} height={16} />
@@ -37,8 +46,6 @@ const TableRow: React.FC<Props> = ({ item, columns, deleteHandler, onClickEdit }
                 <DeleteIcon width={16} height={16} />
               </button>
             </>
-          ) : (
-            "Ne"
           )}
         </td>
       ))}
